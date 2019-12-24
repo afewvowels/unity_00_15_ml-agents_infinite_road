@@ -8,9 +8,11 @@ public class CarAgent : Agent
     private Rigidbody rb;
     private BoxCollider bc;
     private float forceMultiplier;
+    private int moveCheck;
 
     private void Start()
     {
+        moveCheck = 0;
         forceMultiplier = 500.0f;
         carAcademy = FindObjectOfType<CarAcademy>();
         bc = GetComponent<BoxCollider>();
@@ -19,9 +21,24 @@ public class CarAgent : Agent
 
     private void FixedUpdate()
     {
+        if (rb.velocity.magnitude < 0.01f)
+        {
+            moveCheck++;
+        }
+        else
+        {
+            moveCheck = 0;
+        }
+
         if (transform.position.y < -10.0f)
         {
             AddReward(-0.5f);
+            Done();
+        }
+
+        if (moveCheck > 1000)
+        {
+            AddReward(-0.1f);
             Done();
         }
     }
@@ -95,6 +112,8 @@ public class CarAgent : Agent
 
     public override void AgentReset()
     {
+        moveCheck = 0;
+        
         transform.localRotation = Quaternion.identity;
 
         rb.velocity = Vector3.zero;
