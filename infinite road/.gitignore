@@ -10,11 +10,13 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Aa]ssets/TinyCar
-!/[Aa]ssets/TinyCar/Prefabs/car_Modified Variant.prefab
+!car_Modified Variant.prefab
 /[Aa]ssets/PathCreator
-!/[Aa]ssets/PathCreator/Examples/Scripts/RoadMeshCreator.cs
+!RoadMeshCreator.cs
 /[Aa]ssets/[Mm]odels/
 /[Aa]ssets/[Ss]ummaries/
+
+*.DS_Store
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
