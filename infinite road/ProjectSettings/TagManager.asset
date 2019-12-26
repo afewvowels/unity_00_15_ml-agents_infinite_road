@@ -8,6 +8,7 @@ TagManager:
   - road
   - carscene
   - checkpoint
+  - agent
   layers:
   - Default
   - TransparentFX
