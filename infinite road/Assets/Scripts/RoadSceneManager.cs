@@ -206,13 +206,16 @@ public class RoadSceneManager : MonoBehaviour
         pathCreator.bezierPath = GeneratePath(pathInfo.GetPath());
         roadMeshCreator.flattenSurface = true;
         roadMeshCreator.roadWidth = pathInfo.GetRandomRoadWidth();
-        if (roadRoot.transform.childCount > 0)
-        {
-            Destroy(roadRoot.transform.GetChild(0).gameObject);
-        }
+        // for(int i = 0; i < roadRoot.transform.childCount; i++)
+        // {
+        //     Destroy(roadRoot.transform.GetChild(i).gameObject);
+        // }
         roadMeshCreator.TriggerUpdate();
         instantiatedGoal = (GameObject)Instantiate(goalPrefab);
         instantiatedGoal.transform.SetParent(transform, false);
+        instantiatedGoal.GetComponent<BoxCollider>().size = new Vector3(roadMeshCreator.roadWidth + 5.0f, 4.0f, 5.0f);
+        instantiatedGoal.transform.localRotation = pathCreator.path.GetRotationAtDistance(pathCreator.path.length);
+        instantiatedGoal.transform.Rotate(0.0f, 0.0f, 90.0f);
         int furthestPoint = pathCreator.bezierPath.NumPoints - 1;
         instantiatedGoal.transform.localPosition = pathCreator.bezierPath.GetPoint(furthestPoint);
         carAgent.transform.localPosition = pathCreator.bezierPath.GetPoint(0);
@@ -221,15 +224,23 @@ public class RoadSceneManager : MonoBehaviour
         carAgent.transform.position += transform.forward * 2.0f;
         carAgent.GetComponent<Rigidbody>().isKinematic = false;
         carAgent.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-        transform.GetChild(2).GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1.0f, (float)pathInfo.GetPathLength() * 2.0f);
-        transform.GetChild(2).gameObject.AddComponent<MeshCollider>();
-        transform.GetChild(2).gameObject.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+        roadRoot.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1.0f, (float)pathInfo.GetPathLength() * 2.0f);
+        roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+        for (int i = 0; i < roadRoot.transform.GetChild(0).gameObject.GetComponents<MeshCollider>().Length; i++)
+        {
+            Destroy(roadRoot.transform.GetChild(0).gameObject.GetComponents<MeshCollider>()[0]);
+        }
+        
+        roadRoot.transform.GetChild(0).gameObject.AddComponent<MeshCollider>();
+        roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshCollider>().sharedMesh =
+            roadRoot.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh;
+        
+        // roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshCollider>().sharedMesh = roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshFilter>().sharedMesh;
         // transform.GetChild(2).GetComponent<MeshCollider>().convex = true;
 
         float dst = 0.0f;
         float increment = 25.0f;
 
-        Debug.Log("Path length: " + pathCreator.path.length.ToString());
         while (dst < (pathCreator.path.length - increment))
         {
             if (dst < increment)

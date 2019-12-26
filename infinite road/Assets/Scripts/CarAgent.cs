@@ -19,7 +19,11 @@ public class CarAgent : Agent
         rb = GetComponent<Rigidbody>();
     }
 
-    private void FixedUpdate()
+    // private void FixedUpdate()
+    // {
+    // }
+    
+    public override void AgentAction(float[] vectorAction)
     {
         if (rb.velocity.magnitude < 0.01f)
         {
@@ -41,10 +45,7 @@ public class CarAgent : Agent
             AddReward(-0.1f);
             Done();
         }
-    }
-    
-    public override void AgentAction(float[] vectorAction)
-    {
+        
         var moveAction = 0.0f;
         var turnAction = 0.0f;
 
@@ -139,7 +140,7 @@ public class CarAgent : Agent
 
     private bool IsOnRoad()
     {
-        Debug.DrawRay(bc.bounds.center, -transform.up * 0.4f, Color.magenta);
+        // Debug.DrawRay(bc.bounds.center, -transform.up * 0.4f, Color.magenta);
         return Physics.Raycast(bc.bounds.center, -transform.up, 0.4f);
     }
 
