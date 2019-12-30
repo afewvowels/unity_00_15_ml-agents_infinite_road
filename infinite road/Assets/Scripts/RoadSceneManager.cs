@@ -176,6 +176,8 @@ public class RoadSceneManager : MonoBehaviour
 
         float newZ = 0.0f;
 
+        float randomizeOffsetX = Random.value < 0.5f ? 1.0f : -1.0f;
+
         for (int i = 0; i < pathInfo.GetPathLength(); i++)
         {
             float newX = 0.0f;
@@ -185,11 +187,11 @@ public class RoadSceneManager : MonoBehaviour
             {
                 if (i % 2 == 0)
                 {
-                    newX = Random.Range(2.0f, pathInfo.GetHorizontalDistance());
+                    newX = Random.Range(2.0f, pathInfo.GetHorizontalDistance()) * randomizeOffsetX;
                 }
                 else
                 {
-                    newX = Random.Range(-pathInfo.GetHorizontalDistance(), -2.0f);
+                    newX = Random.Range(-pathInfo.GetHorizontalDistance(), -2.0f) * randomizeOffsetX;
                 }
             }
 
@@ -221,7 +223,9 @@ public class RoadSceneManager : MonoBehaviour
         carAgent.transform.localPosition = pathCreator.bezierPath.GetPoint(0);
         carAgent.transform.localRotation = pathCreator.path.GetRotation(0);
         carAgent.transform.Rotate(0.0f, 0.0f, 90.0f);
-        carAgent.transform.position += transform.forward * 2.0f;
+        carAgent.transform.position += transform.forward * 3.0f;
+        carAgent.GetComponent<CarAgent>().goal = instantiatedGoal;
+        // carAgent.transform.position += transform.TransformDirection(Vector3.up);
         carAgent.GetComponent<Rigidbody>().isKinematic = false;
         carAgent.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
         roadRoot.transform.GetChild(0).GetComponent<MeshRenderer>().material.mainTextureScale = new Vector2(1.0f, (float)pathInfo.GetPathLength() * 2.0f);
@@ -230,11 +234,11 @@ public class RoadSceneManager : MonoBehaviour
         {
             Destroy(roadRoot.transform.GetChild(0).gameObject.GetComponents<MeshCollider>()[0]);
         }
-        
+
         roadRoot.transform.GetChild(0).gameObject.AddComponent<MeshCollider>();
         roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshCollider>().sharedMesh =
             roadRoot.transform.GetChild(0).GetComponent<MeshFilter>().sharedMesh;
-        
+
         // roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshCollider>().sharedMesh = roadRoot.transform.GetChild(0).gameObject.GetComponent<MeshFilter>().sharedMesh;
         // transform.GetChild(2).GetComponent<MeshCollider>().convex = true;
 
@@ -248,7 +252,7 @@ public class RoadSceneManager : MonoBehaviour
                 dst += increment;
                 continue;
             }
-            
+
             GameObject checkpoint = (GameObject)Instantiate(checkpointPrefab);
             checkpoint.transform.SetParent(transform, false);
             checkpoint.transform.position = pathCreator.path.GetPointAtDistance(dst);

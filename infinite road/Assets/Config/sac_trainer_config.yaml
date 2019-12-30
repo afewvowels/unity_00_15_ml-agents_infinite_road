@@ -26,4 +26,9 @@ default:
 
 CarAgent:
     buffer_init_steps: 10000
-    max_steps: 1.0e6
+    max_steps: 2.0e6
+    reward_signals:
+        gail:
+          strength: 0.25
+          gamma: 0.9
+          demo_path: /Users/bluebackdev/github/unity_00_15_ml-agents_infinite_road/infinite road/Assets/Demonstrations/InfiniteRoad.demo

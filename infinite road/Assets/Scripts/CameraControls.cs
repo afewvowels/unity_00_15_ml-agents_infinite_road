@@ -17,6 +17,9 @@ public class CameraControls : MonoBehaviour
         {
             sceneManagers.Add(scene.GetComponent<RoadSceneManager>());
         }
+
+        ChangeActiveScene();
+        isParentedToAgent = !isParentedToAgent;
     }
 
     private void Update()

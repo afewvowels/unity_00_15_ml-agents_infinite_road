@@ -4,48 +4,33 @@ using MLAgents;
 public class CarAgent : Agent
 {
     private CarAcademy carAcademy;
-    public RoadSceneManager sceneManager;
+    public RoadSceneManagerVariant sceneManager;
     private Rigidbody rb;
     private BoxCollider bc;
     private float forceMultiplier;
-    private int moveCheck;
+    private int agentStepCount;
+    public GameObject[] sensors;
+    public GameObject goal;
 
     private void Start()
     {
-        moveCheck = 0;
+        agentStepCount = 0;
         forceMultiplier = 500.0f;
         carAcademy = FindObjectOfType<CarAcademy>();
         bc = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
     }
 
-    // private void FixedUpdate()
-    // {
-    // }
-    
     public override void AgentAction(float[] vectorAction)
     {
-        if (rb.velocity.magnitude < 0.01f)
-        {
-            moveCheck++;
-        }
-        else
-        {
-            moveCheck = 0;
-        }
+        agentStepCount++;
 
-        if (transform.position.y < -10.0f)
+        if (transform.position.y < -10.0f || IsTippedOver())
         {
-            AddReward(-0.5f);
+            AddReward(-0.25f);
             Done();
         }
 
-        if (moveCheck > 1000)
-        {
-            AddReward(-0.1f);
-            Done();
-        }
-        
         var moveAction = 0.0f;
         var turnAction = 0.0f;
 
@@ -61,10 +46,10 @@ public class CarAgent : Agent
                 rb.AddForce(transform.forward * forceMultiplier, ForceMode.Force);
                 break;
             case 2:
-                rb.AddForce(transform.forward * forceMultiplier * 1.5f, ForceMode.Force);
+                rb.AddForce(transform.forward * forceMultiplier * 2.0f, ForceMode.Force);
                 break;
             case 3:
-                rb.AddForce(transform.forward * -forceMultiplier, ForceMode.Force);
+                rb.AddForce(transform.forward * -forceMultiplier * 1.5f, ForceMode.Force);
                 break;
         }
 
@@ -73,10 +58,10 @@ public class CarAgent : Agent
             switch (turnAction)
             {
                 case 1:
-                    rb.AddTorque(transform.up * forceMultiplier * 0.5f, ForceMode.Force);
+                    rb.AddTorque(transform.up * forceMultiplier, ForceMode.Force);
                     break;
                 case 2:
-                    rb.AddTorque(transform.up * -forceMultiplier * 0.5f, ForceMode.Force);
+                    rb.AddTorque(transform.up * -forceMultiplier, ForceMode.Force);
                     break;
             }
         }
@@ -113,8 +98,8 @@ public class CarAgent : Agent
 
     public override void AgentReset()
     {
-        moveCheck = 0;
-        
+        agentStepCount = 0;
+
         transform.localRotation = Quaternion.identity;
 
         rb.velocity = Vector3.zero;
@@ -130,7 +115,7 @@ public class CarAgent : Agent
         float roadMinWidth = carAcademy.resetParameters["rMin"];
         float roadMaxWidth = carAcademy.resetParameters["rMax"];
 
-        RoadSceneManager.PathInfo pathInfo = new RoadSceneManager.PathInfo(horizontal, vertical, pathLength,
+        RoadSceneManagerVariant.PathInfo pathInfo = new RoadSceneManagerVariant.PathInfo(horizontal, vertical, pathLength,
                                                                             horizontalDistance, verticalDistance, nodeMinDistance,
                                                                             nodeMaxDistance, roadMinWidth, roadMaxWidth);
 
@@ -138,10 +123,119 @@ public class CarAgent : Agent
         sceneManager.GenerateNewPath();
     }
 
+    public override void CollectObservations()
+    {
+        float distance = -9999.9f;
+        if (goal)
+        {
+            distance = Vector3.Distance(goal.transform.position, transform.position);
+        }
+        Debug.Log("distance: " + distance.ToString());
+
+        AddVectorObs(distance);
+
+        RaycastHit hit;
+        Vector3 castPosition = transform.position + transform.TransformDirection(Vector3.up);
+        Vector3 castDirection = transform.TransformDirection(Vector3.forward);
+        LayerMask hitLayer = 1 << 2;
+        hitLayer = ~hitLayer;
+
+        if (Physics.Raycast(castPosition, castDirection, out hit, 15.0f, hitLayer))
+        {
+            Debug.DrawRay(castPosition, castDirection * hit.distance, Color.magenta);
+            AddVectorObs(hit.distance);
+            Debug.Log("Raycast distance: " + hit.distance.ToString());
+        }
+        else
+        {
+            Debug.DrawRay(castPosition, castDirection * 5.0f, Color.cyan);
+            AddVectorObs(-9999.9f);
+        }
+    }
+
+    private bool IsTippedOver()
+    {
+        Transform sensor = sensors[0].transform;
+
+        if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.right), 0.15f))
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.right) * 0.15f, Color.red, 0.15f);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.right) * 0.15f, Color.green, 0.15f);
+        }
+
+        sensor = sensors[1].transform;
+
+        if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.left), 0.15f))
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.left) * 0.15f, Color.red, 0.15f);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.left) * 0.15f, Color.green, 0.15f);
+        }
+
+        sensor = sensors[2].transform;
+
+        if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.forward), 0.15f))
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.forward) * 0.15f, Color.red, 0.15f);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.forward) * 0.15f, Color.green, 0.15f);
+        }
+
+        sensor = sensors[3].transform;
+
+        if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.back), 0.15f))
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.back) * 0.15f, Color.red, 0.15f);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.back) * 0.15f, Color.green, 0.15f);
+        }
+
+        sensor = sensors[4].transform;
+
+        if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.up), 0.15f))
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.up) * 0.15f, Color.red, 0.15f);
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.up) * 0.15f, Color.green, 0.15f);
+        }
+
+        return false;
+    }
+
     private bool IsOnRoad()
     {
-        // Debug.DrawRay(bc.bounds.center, -transform.up * 0.4f, Color.magenta);
-        return Physics.Raycast(bc.bounds.center, -transform.up, 0.4f);
+        for (int i = 0; i < sensors.Length; i++)
+        {
+            Transform sensor = sensors[i].transform;
+
+            if (Physics.Raycast(sensor.position, sensor.TransformDirection(Vector3.down), 0.5f))
+            {
+                Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.down) * 0.5f, Color.green, 0.15f);
+                return true;
+            }
+            else
+            {
+                Debug.DrawRay(sensor.position, sensor.TransformDirection(Vector3.down) * 0.5f, Color.red, 0.15f);
+            }
+        }
+
+        return false;
     }
 
     private void OnTriggerEnter(Collider c)
@@ -154,6 +248,8 @@ public class CarAgent : Agent
 
         if (c.gameObject.CompareTag("goal"))
         {
+            float stepReward = (float)(15000 - agentStepCount) / 15000.0f;
+            AddReward(stepReward);
             AddReward(1.0f);
             Done();
         }

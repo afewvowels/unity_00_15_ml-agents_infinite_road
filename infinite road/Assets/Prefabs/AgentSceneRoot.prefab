@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 37702727022136797}
   - component: {fileID: 37702727022136794}
+  - component: {fileID: 4397949975345270639}
   m_Layer: 0
   m_Name: AgentSceneRoot
   m_TagString: carscene
@@ -40,9 +41,31 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 37702727022136796}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ea57510f229c4e2bbb38c7d6f1d8b2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carAgent: {fileID: 3756145329303374297}
+  goalPrefab: {fileID: 519311441602517140, guid: 0e68574eae1c34a75bf85e065a3f1fe3,
+    type: 3}
+  instantiatedGoal: {fileID: 0}
+  pathCreator: {fileID: 37702727363079118}
+  roadMeshCreator: {fileID: 37702727363079119}
+  checkpointPrefab: {fileID: 1380104148866039154, guid: 33f65625d9e714f4eaa99fb25fc69f4a,
+    type: 3}
+  checkpoints: []
+  roadRoot: {fileID: 37702727363079088}
+--- !u!114 &4397949975345270639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37702727022136796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04127783e059543228fcde6230ffa795, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   carAgent: {fileID: 3756145329303374297}
@@ -104,7 +127,7 @@ MonoBehaviour:
   autoUpdate: 0
   roadWidth: 1
   thickness: 0.5
-  flattenSurface: 1
+  flattenSurface: 0
   roadMaterial: {fileID: 2100000, guid: b5df4735192845740bd11076dc9cdc99, type: 2}
   undersideMaterial: {fileID: 2100000, guid: c1d8d882244c5344fa86a8fd23246f81, type: 2}
   textureTiling: 1
@@ -163,6 +186,66 @@ MonoBehaviour:
     showNormalsHelpInfo: 0
     tabIndex: 0
   initialized: 1
+--- !u!1 &481292351321316401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2562738530069867375}
+  m_Layer: 0
+  m_Name: SensorF
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2562738530069867375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481292351321316401}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.79}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6930959427605138128}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2825297240963775520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8889057737684093662}
+  m_Layer: 0
+  m_Name: SensorL
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8889057737684093662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2825297240963775520}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.33, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6930959427605138128}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2960452708061364180
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +361,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7992375427682070646}
+  - {fileID: 6930959427605138128}
   m_Father: {fileID: 37702727022136797}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -295,7 +379,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 64
   m_CollisionDetection: 3
 --- !u!65 &7711797528629396941
 BoxCollider:
@@ -323,8 +407,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    vectorObservationSize: 0
-    numStackedVectorObservations: 1
+    vectorObservationSize: 2
+    numStackedVectorObservations: 3
     vectorActionSize: 0400000003000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 0
@@ -345,11 +429,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
-    maxStep: 0
+    maxStep: 15000
     resetOnDone: 1
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
-  sceneManager: {fileID: 37702727022136794}
+  sceneManager: {fileID: 4397949975345270639}
+  sensors:
+  - {fileID: 8248689805153907948}
+  - {fileID: 2825297240963775520}
+  - {fileID: 481292351321316401}
+  - {fileID: 3966071096267018738}
+  - {fileID: 5913584749081788036}
+  goal: {fileID: 0}
 --- !u!114 &582766136815219654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,17 +457,16 @@ MonoBehaviour:
   detectableTags:
   - goal
   - road
-  - checkpoint
-  raysPerDirection: 4
-  maxRayDegrees: 160
+  raysPerDirection: 6
+  maxRayDegrees: 180
   sphereCastRadius: 0.25
-  rayLength: 8
-  observationStacks: 3
+  rayLength: 11
+  observationStacks: 10
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 0.7123702, b: 0, a: 1}
   useWorldPositions: 1
-  startVerticalOffset: 0.75
-  endVerticalOffset: -0.1
+  startVerticalOffset: 2
+  endVerticalOffset: -1
 --- !u!114 &1481867948043540421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,17 +483,141 @@ MonoBehaviour:
   detectableTags:
   - goal
   - road
-  - checkpoint
-  raysPerDirection: 0
-  maxRayDegrees: 70
+  raysPerDirection: 1
+  maxRayDegrees: 25
   sphereCastRadius: 0.5
-  rayLength: 36
-  observationStacks: 3
+  rayLength: 40
+  observationStacks: 10
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 0, b: 0.97422075, a: 1}
   useWorldPositions: 1
-  startVerticalOffset: 1
-  endVerticalOffset: -0.5
+  startVerticalOffset: 2
+  endVerticalOffset: -2
+--- !u!1 &3966071096267018738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281662145745133406}
+  m_Layer: 0
+  m_Name: SensorB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1281662145745133406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3966071096267018738}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.79}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6930959427605138128}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5913584749081788036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2423417316999123730}
+  m_Layer: 0
+  m_Name: SensorT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2423417316999123730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5913584749081788036}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.28, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6930959427605138128}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8157402207250881469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6930959427605138128}
+  m_Layer: 0
+  m_Name: TipSensors
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6930959427605138128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8157402207250881469}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1180626848761256148}
+  - {fileID: 8889057737684093662}
+  - {fileID: 2562738530069867375}
+  - {fileID: 1281662145745133406}
+  - {fileID: 2423417316999123730}
+  m_Father: {fileID: 5301129794979776695}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8248689805153907948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1180626848761256148}
+  m_Layer: 0
+  m_Name: SensorR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1180626848761256148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8248689805153907948}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.33, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6930959427605138128}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &7990699544526590768
 PrefabInstance:
   m_ObjectHideFlags: 0
