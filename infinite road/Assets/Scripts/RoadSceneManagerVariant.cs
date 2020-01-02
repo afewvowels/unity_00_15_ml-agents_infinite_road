@@ -154,7 +154,9 @@ public class RoadSceneManagerVariant : MonoBehaviour
     {
         pathInfo.IncrementPathLength();
     }
-
+    /*
+        All hail the monolith!
+    */
     public void GenerateNewPath()
     {
         int roadIndex = 0;
